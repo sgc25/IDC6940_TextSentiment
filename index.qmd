@@ -1,11 +1,12 @@
 ---
-title: "Sample Report - Data Science Capstone"
-author: "Student name"
+title: "Writing a great story for data science projects"
+subtitle: "This is a Report Template"
+author: "Students names (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
   html:
     code-fold: true
-course: STA 6257 - Advanced Statistical Modeling
+course: Capstone Projects in Data Science
 bibliography: references.bib # file contains bibtex for references
 #always_allow_html: true # this allows to get PDF with HTML features
 self-contained: true
@@ -17,11 +18,35 @@ editor:
     wrap: 72
 ---
 
+::: callout-important
+**Remember:** Your goal is to make your audience understand and care
+about your findings. By crafting a compelling story, you can effectively
+communicate the value of your data science project.
+
+Carefully read this template since it has instructions and tips to
+writing!
+:::
+
 ## Introduction
 
-### What is "mehtod"?
+The introduction should:
 
-This is an introduction to LASSO regression, which is a non-parametric
+-   Develop a storyline that captures attention and maintains interest.
+
+-   Your audience is your peers
+
+-   Clearly state the problem or question you're addressing.
+
+```{=html}
+<!-- -->
+```
+-   Introduce why it is relevant needs.
+
+-   Provide an overview of your approach.
+
+Example of writing including citing references:
+
+*This is an introduction to ..... regression, which is a non-parametric
 estimator that estimates the conditional expectation of two variables
 which is random. The goal of a kernel regression is to discover the
 non-linear relationship between two random variables. To discover the
@@ -29,32 +54,32 @@ non-linear relationship, kernel estimator or kernel smoothing is the
 main method to estimate the curve for non-parametric statistics. In
 kernel estimator, weight function is known as kernel function
 [@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]
+The PCA [@daffertshofer2004pca]*
 
-This is my work and I want to add more work...
-
-### Related work
-
-This section is going to cover the literature review...
+*This is my work and I want to add more work...*
 
 ## Methods
 
-The common non-parametric regression model is
-$Y_i = m(X_i) + \varepsilon_i$, where $Y_i$ can be defined as the sum of
-the regression function value $m(x)$ for $X_i$. Here $m(x)$ is unknown
-and $\varepsilon_i$ some errors. With the help of this definition, we
-can create the estimation for local averaging i.e. $m(x)$ can be
-estimated with the product of $Y_i$ average and $X_i$ is near to $x$. In
-other words, this means that we are discovering the line through the
-data points with the help of surrounding data points. The estimation
-formula is printed below [@R-base]:
+-   Detail the models or algorithms used.
+
+-   Justify your choices based on the problem and data.
+
+*The common non-parametric regression model is*
+$Y_i = m(X_i) + \varepsilon_i$*, where* $Y_i$ *can be defined as the sum
+of the regression function value* $m(x)$ *for* $X_i$*. Here* $m(x)$ *is
+unknown and* $\varepsilon_i$ *some errors. With the help of this
+definition, we can create the estimation for local averaging i.e.*
+$m(x)$ *can be estimated with the product of* $Y_i$ *average and* $X_i$
+*is near to* $x$*. In other words, this means that we are discovering
+the line through the data points with the help of surrounding data
+points. The estimation formula is printed below [@R-base]:*
 
 $$
 M_n(x) = \sum_{i=1}^{n} W_n (X_i) Y_i  \tag{1}
-$$ $W_n(x)$ is the sum of weights that belongs to all real numbers.
-Weights are positive numbers and small if $X_i$ is far from $x$.
+$$$W_n(x)$ *is the sum of weights that belongs to all real numbers.
+Weights are positive numbers and small if* $X_i$ *is far from* $x$*.*
 
-Another equation:
+*Another equation:*
 
 $$
 y_i = \beta_0 + \beta_1 X_1 +\varepsilon_i
@@ -62,10 +87,15 @@ $$
 
 ## Analysis and Results
 
-### Data and Visualization
+### Data Exploration and Visualization
+
+-   Describe your data sources and collection process.
+
+-   Present initial findings and insights through visualizations.
+
+-   Highlight unexpected patterns or anomalies.
 
 A study was conducted to determine how...
-
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # loading packages 
@@ -96,12 +126,24 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 
 ```
 
-### Statistical Modeling
+### Modeling and Results 
+
+-   Explain your data preprocessing and cleaning steps.
+
+-   Present your key findings in a clear and concise manner.
+
+-   Use visuals to support your claims.
+
+-   **Tell a story about what the data reveals.**
 
 ```{r}
 
 ```
 
 ### Conclusion
+
+-   Summarize your key findings.
+
+-   Discuss the implications of your results.
 
 ## References
