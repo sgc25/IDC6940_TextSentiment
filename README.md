@@ -4,9 +4,9 @@ Create a GitHub page for the project
 
 ## GitHub:
 #### 1. Create a GitHub account and Sign in
-#### 2. Go to https://github.com/acohenstat/STA6257_Project and fork (create a copy to your GitHub)
+#### 2. Go to [https://github.com/capstone4ds/capstone4ds_template](https://github.com/capstone4ds/capstone4ds_template) and fork (create a copy to your GitHub)
 ![fork](fork.png)
-#### 3. Change the name of the repo to *STA6257_Project_NameofGroup*
+#### 3. Change the name of the repo to *IDC6940_GroupName*
 #### 4. Go to *Settings* -> *Pages* -> under *Branch* -> select *main*
 #### 5. Wait for a few seconds and refresh the page. You see the link of the page. 
 
