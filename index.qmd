@@ -18,6 +18,8 @@ editor:
     wrap: 72
 ---
 
+Slides: [slides.html](slides.html) ( Go to `slides.qmd` to edit)
+
 ::: callout-important
 **Remember:** Your goal is to make your audience understand and care
 about your findings. By crafting a compelling story, you can effectively
@@ -37,9 +39,8 @@ The introduction should:
 
 -   Clearly state the problem or question you're addressing.
 
-```{=html}
 <!-- -->
-```
+
 -   Introduce why it is relevant needs.
 
 -   Provide an overview of your approach.
@@ -126,7 +127,7 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 
 ```
 
-### Modeling and Results 
+### Modeling and Results
 
 -   Explain your data preprocessing and cleaning steps.
 
