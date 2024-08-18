@@ -18,7 +18,8 @@ editor:
     wrap: 72
 ---
 
-Slides: [slides.html](slides.html) ( Go to `slides.qmd` to edit)
+Slides: [slides.html](slides.html){target="_blank"} ( Go to `slides.qmd`
+to edit)
 
 ::: callout-important
 **Remember:** Your goal is to make your audience understand and care
