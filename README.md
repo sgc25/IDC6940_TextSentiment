@@ -19,3 +19,20 @@ More information:
 - [GitHub](https://happygitwithr.com/index.html)
 - [Video1 RStudio connection to GitHub](https://www.youtube.com/watch?v=MdmnE3AnkQE)
 - [Video2 RStudio connection to GitHub](https://www.youtube.com/watch?v=jN6tvgt3GK8)
+
+# Text Sentiment Capstone Project
+
+This project analyzes customer support messages using sentiment analysis and machine learning techniques to predict escalation risk.
+
+## Structure
+- `data/raw`: Original dataset
+- `data/processed`: Cleaned and engineered data
+- `notebooks/`: Jupyter Notebooks for each step of the process
+- `reports/`: Final report and presentation materials
+
+## Methods
+- NLP (TextBlob, VADER)
+- LASSO for feature selection
+- XGBoost for modeling
+- Optional: Conformal predictors for uncertainty estimation
+
