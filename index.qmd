@@ -1,5 +1,5 @@
 ---
-title: "XGBoost and LASSO for Text Sentiment Analysis"
+title: "Tone Matters: Predicting Escalation in Chat Support Using VADER"
 subtitle: ""
 author: "Samantha Chickeletti & Michael Alfrey (Advisor: Dr. Cohen)"
 date: "`r Sys.Date()`"
