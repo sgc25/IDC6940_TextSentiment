@@ -5,12 +5,11 @@ This project analyzes customer support messages using sentiment analysis and mac
 ## Structure
 - `data/raw`: Original dataset
 - `data/processed`: Cleaned and engineered data
-- `notebooks/`: Jupyter Notebooks for each step of the process
+- `notebooks/`: Notebooks for each step of the process
 - `reports/`: Final report and presentation materials
 
 ## Methods
 - NLP (TextBlob, VADER)
 - LASSO for feature selection
 - XGBoost for modeling
-- Optional: Conformal predictors for uncertainty estimation
 
