@@ -1,8 +1,8 @@
 ---
-title: "Writing a great story for data science projects - Summer 2025"
-subtitle: "This is a Report Template Quarto"
-author: "Students names (Advisor: Dr. Cohen)"
-date: '`r Sys.Date()`'
+title: "XGBoost and LASSO for Text Sentiment Analysis"
+subtitle: ""
+author: "Samantha Chickeletti & Michael Alfrey (Advisor: Dr. Cohen)"
+date: "`r Sys.Date()`"
 format:
   html:
     code-fold: true
