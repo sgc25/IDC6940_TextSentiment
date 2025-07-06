@@ -9,7 +9,7 @@ This project analyzes customer support messages using sentiment analysis and mac
 - `reports/`: Final report and presentation materials
 
 ## Methods
-- NLP (TextBlob, VADER)
+- NLP (VADER)
 - LASSO for feature selection
 - XGBoost for modeling
 
