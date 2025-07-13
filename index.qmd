@@ -1,5 +1,5 @@
 ---
-title: "Sentiment Classification of Customer Support Tweets Using VADER and XGBoost"
+title: "Tone Matters: Sentiment Classification of Support Tweets Using VADER and XGBoost"
 subtitle: ""
 author: "Samantha Chickeletti & Michael Alfrey (Advisor: Dr. Cohen)"
 date: "`r Sys.Date()`"
