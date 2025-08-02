@@ -202,8 +202,7 @@ These metrics were selected to account for class imbalance, which is common in s
 
 ## Analysis and Results
 
-```{r, warning=FALSE, echo=T, message=FALSE}
-# loading packages 
+```{r, warning=FALSE, echo=TRUE, message=FALSE, title="Packages"}
 library(tidyverse)
 library(knitr)
 library(ggthemes)
@@ -211,7 +210,7 @@ library(ggrepel)
 library(dslabs)
 ```
 
-```{python, message=FALSE}
+```{python, message=FALSE, title="Python Libraries for EDA and Visualization"}
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -235,7 +234,7 @@ To conduct this analysis, we used the Customer Support on Twitter dataset from K
 -	inbound (flag customer = TRUE or company = FALSE)
 -	response_tweet_id and in_response_to_tweet_id (for tracking conversation threads)
 
-```{python}
+```{python, title="Load Dataset"}
 # Load Data
 df = pd.read_csv("twcs/twcs.csv", low_memory=False)
 df.sample(5)
