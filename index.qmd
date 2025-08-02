@@ -32,36 +32,38 @@ To build a full machine learning pipeline around VADER, we will use its sentimen
 
 The dataset selected for this project is the “Customer Support on Twitter” dataset from Kaggle, which contains real-world support interactions between users and brands such as Apple, Amazon, and Comcast. The messages are short, informal, and emotionally expressive—closely mirroring real-world customer support scenarios—and make the dataset ideal for sentiment analysis and predictive modeling.
 
-
 Natural Language Processing (NLP) has become a vital tool for understanding customer sentiment across digital platforms. A variety of approaches have been proposed in the literature, from lexicon-based models such as VADER to machine learning methods like XGBoost. This review highlights the studies that informed the methodological design of our project.
+
+### Literature Review
 
 #### Lexicon-Based Sentiment Analysis
 
-The foundation of our sentiment scoring approach is VADER, a rule-based model that excels at detecting sentiment in informal, short-form text such as tweets and chat messages [@hutto2014vader]. VADER is well-suited for analyzing customer service conversations because it accounts for:
+Lexicon based methods remain a powerful choice for analyzing short, informal messages. VADER is particularly effective because it incorporates key linguistic signals such as:
 
 - Capitalization: (e.g., `"AWESOME"` → increases intensity)
-
 - Punctuation: (e.g., `!` → amplifies sentiment)
-
 - Slang, emojis, and emoticons: (e.g., `:)` → amplifies sentiment)
-
 - Negation: (e.g., `"not good"` → polarity reversal)
+
+These elements help capture the nuanced sentiment found in customer service conversations that traditional lexicon models may often miss. 
 
 Recent research continues to support and expand on VADER's use. Barik and Misra [@barik2024vader] evaluated an improved VADER lexicon in analyzing e-commerce reviews and emphasized its interpretability and processing speed. Chadha and Aryan [@chadha2023vader] also confirmed VADER’s reliability in sentiment classification tasks, noting its effectiveness in fast-paced business contexts. Youvan [@youvan2024vader] offered a comprehensive review of VADER’s core logic, highlighting its treatment of intensifiers, negations, and informal expressions.
 
 #### Machine Learning for Sentiment Classification
 
-To complement VADER’s labeling, we incorporate XGBoost, an efficient and scalable gradient boosting algorithm, as a supervised classifier. Lestari et al. [@lestari2025xgboost] compared XGBoost with AdaBoost for movie review classification and found XGBoost achieved higher accuracy and generalizability. Sefara and Rangata [@sefara2024domain] also found XGBoost to be the most effective model for classifying domain-specific tweets, outperforming Logistic Regression and SVM in both performance and efficiency. Lu and Schelle [@lu2025tesla] demonstrated how XGBoost could be used to extract interpretable feature importance from tweet sentiment, providing additional value for insights and decision-making.
+While VADER is powerful, it's limited to its predefined lexicon and rule set. To complement VADER’s labeling, we incorporate XGBoost, an efficient and scalable gradient boosting algorithm, as a supervised classifier. Lestari et al. [@lestari2025xgboost] compared XGBoost with AdaBoost for movie review classification and found XGBoost achieved higher accuracy and generalizability. Sefara and Rangata [@sefara2024domain] also found XGBoost to be the most effective model for classifying domain-specific tweets, outperforming Logistic Regression and SVM in both performance and efficiency. Lu and Schelle [@lu2025tesla] demonstrated how XGBoost could be used to extract interpretable feature importance from tweet sentiment, providing a compelling case for our approach.
 
+With these foundations in place, we now detail the methodology that guided our implementation.
 
 ## Methods
 
 #### Preprocessing and Sentiment Labeling with VADER
-Before applying VADER to assign sentiment labels to tweets, we preprocessed tweets by removing URLs, user mentions, punctuation, and English stopwords. While VADER can handle informal text, this step was performed to improve text uniformity and prepare for downstream modeling. We then applied the VADER sentiment analyzer to label tweets as Positive, Neutral, or Negative based on their compound score. The compound sentiment score is computed as:
+Before applying VADER, our process began by cleaning the raw tweet text to ensure consistency. We removed URLs, user mentions, and hashtags. While VADER can handle informal text, this step was performed to improve text uniformity and prepare for downstream modeling. After cleaning, we applied VADER to generate a compound sentiment score for each tweet and label tweets as Positive, Neutral, or Negative based on standardized thresholds. The compound sentiment score is computed as:
 
 $$
-\text{compound} = \frac{\sum_{i=1}^{n} s_i}{\sqrt{\sum_{i=1}^{n} s_i^2} + \alpha}
+\text{compound score} = \frac{\sum_{i=1}^{n} s_i}{\sqrt{\sum_{i=1}^{n} s_i^2} + \alpha}
 $$
+
 Where $s_i$ is the sentiment score for each word or token and $\alpha$ is a normalization constant (typically set to 15).
 
 The final sentiment labels are then assigned using the following thresholds:
@@ -73,25 +75,26 @@ The final sentiment labels are then assigned using the following thresholds:
 * *Negative* if compound ≤ -0.05
 <br>
 
-#### Example VADER Scoring:
+This automated labeling process served as the backbone for our supervised classification model. 
+For example, a tweet reading: 
 
->> "I’ve been waiting over an HOUR and still no response… this is ridiculous!!!"
+>> "I’ve been delayed over an HOUR and STILL no response… this is ridiculous!!!"
 <br>
 
+#### Example VADER Scoring:
 | Feature         | Detected Element       | VADER Response                  |Score Impact |
 |----------------|------------------------|---------------------------------|-------------|
 | Capitalization | "HOUR", "STILL"        | Increases intensity             | -0.10       |
 | Punctuation    | "..." and "!!!"        | Amplifies negative sentiment    | -0.25       |
 | Lexicon Match  | "ridiculous"           | Strong negative valence         | -0.25       |
 | Overall Tone   | Complaint/frustration  | Strongly negative               | -0.15       |
-| **Final Compound**       |                     | **-0.75**   |
+| **Final Compound**                      |                                 | **-0.75**   |
 
-This tweet yields a compound score of approximately –0.75 and is labeled as negative. These labeled examples served as training data for our classification model.
+This tweet produces a compound score of –0.75 and is labeled as negative, indicating a clear negative sentiment. 
 
+By relying on VADER instead of manual annotation, we create a foundation for downstream supervised learning. This aligns with findings by Lu (2025), who demonstrated that VADER-labeled tweets combined with TF-IDF and XGBoost achieved performance comparable to manually labeled datasets [@lu2025tesla]. Next, we turn to feature extraction, to transform our labeled text into numerical form suitable for machine learning. 
 
-By relying on VADER to label tweets without requiring manual annotation, we create a foundation for downstream supervised learning. This aligns with findings by Lu (2025), who demonstrated that VADER-labeled tweets combined with TF-IDF and XGBoost achieved performance comparable to manually labeled datasets [@lu2025tesla].
-
-#### TF-IDF 
+#### Term Frequency–Inverse Document Frequency (TF-IDF)
 To convert tweets into numerical features for modeling, we employ Term Frequency–Inverse Document Frequency (TF-IDF), a technique that quantifies how important each word is within the context of both the individual tweet and the overall corpus.
 
 Term Frequency (TF) measures how often a word appears in a single tweet (i.e., domain) relative to the total number of words in that tweet:
@@ -99,6 +102,7 @@ Term Frequency (TF) measures how often a word appears in a single tweet (i.e., d
 $$
 \text{TF}_{w_n} = \frac{g_{w_n}^{d_m}}{T_{d_m}}
 $$
+
 Where:<br>
 	•	$w_n$ is the $n^{\text{th}}$ word in domain $d_m$ (a tweet) <br>
 	•	$g_{w_n}^{d_m}$ is the number of times word $w_n$ occurs in domain $d_m$ <br>
@@ -118,6 +122,7 @@ $$
 \text{IDF}_{w_n} = \log\left(\frac{T_{d_m}}{N_{w_n}}\right)
 $$
 
+
 Where: <br>
 	•	$N_{w_n}$ is the number of documents that contain word w_n <br>
 
@@ -131,16 +136,18 @@ $$
 \text{TF-IDF}_{w_n} = \text{TF}_{w_n} \times \text{IDF}_{w_n}
 $$
 
-This process highlights terms that are both prominent in a tweet and distinctive across the dataset, making TF-IDF a powerful and interpretable technique for feature extraction in sentiment analysis pipelines [@barik2024vader].
+
+This process highlights terms that are both prominent in a tweet and distinctive across the dataset, making TF-IDF a powerful and interpretable technique for feature extraction in sentiment analysis pipelines [@barik2024vader]. With our feature matrix ready, we proceeded to modeling.
 
 
-#### XGBoost 
+#### Extreme Gradient Boosting (XGBoost) 
 To model sentiment classifications based on TF-IDF features, we employ XGBoost (Extreme Gradient Boosting), a scalable and regularized tree ensemble algorithm designed for both accuracy and efficiency. XGBoost builds an additive model by iteratively constructing decision trees that minimize a regularized objective function, which balances prediction accuracy with model simplicity. The objective consists of two components: a convex loss function that measures how well the model fits the data, and a regularization term that penalizes overly complex trees.
 <br>
 Each predicted class label $\hat{y}_i$ (positive, neutral, negative) is computed as the sum of outputs from $K$ trees:<br>
 $$
 \hat{y}_i = \phi(x_i) = \sum_{k=1}^K f_k(x_i), \quad f_k \in \mathcal{F}
 $$
+
 Where: <br>
 	•	$x_i$: The input TF-IDF vector for tweet $i$ <br>
 	•	$f_k(x_i)$: The prediction from the $k^\text{th}$ tree for input $x_i$ <br>
@@ -158,7 +165,6 @@ For a new input tweet $x_i,$ each of the 3 trees for each class outputs a score 
 <br>
 Since the positive class has the highest total score, the model assigns the label positive. <br>
 <br>
-<br>
 Once prediction scores are computed, XGBoost must also determine how to train itself to make better predictions through the process of learning optimal tree structure. This is done by minimizing the regularized objective function, which balances prediction accuracy and model complexity: <br>
 $$
 \mathcal{L}(\phi) = \sum_{i} l(\hat{y}_i, y_i) + \sum_{k} \Omega(f_k)
@@ -166,6 +172,7 @@ $$
 $$
 \text{where }\Omega(f) = \gamma T + \frac{1}{2} \lambda \lVert w \rVert^2
 $$
+
 <br>
 	•	$l(y_i, \hat{y}_i)$ is our differentiable convex loss function (softmax loss for multiclass classification), measuring how far off the model’s prediction $\hat{y}_i$ is from the true label $y_i$.,<br>
 	•	$f_k$ is the $k^\text{th}$ decision tree in the ensemble,<br>
@@ -173,71 +180,27 @@ $$
   •	$w$: the vector of leaf scores (weights), <br>
   •	$\gamma$ and $\lambda$: regularization parameters that control tree complexity. <br>
 <br>
-By combining a strong predictive loss with a tree-specific complexity penalty, XGBoost is able to generalize well to new data, outperforming simpler models while remaining computationally efficient [@Chen_2016].
+
+Therefore, by combining a strong predictive loss with a tree-specific complexity penalty, XGBoost is able to generalize well to new data, outperforming simpler models while remaining computationally efficient [@Chen_2016]. It also provides feature importance scores, offering insights into which terms most influence predictions—a valuable asset for customer service teams seeking actionable feedback. 
+
+With the model trained, we evaluated its performance using several classification metrics.
 <br>
 
 #### Evaluation Metrics
 
-Once the sentiment labels were used to train a classification model, it became essential to evaluate how effectively the model performs on new, unseen data. In this project, we use four standard evaluation metrics accuracy, precision, recall, and F1 score to assess model performance.
+To understand how well our model performed, we used four core metrics:
 
-- *Accuracy*: The proportion of correctly predicted labels across all tweets. While it provides an overall gauge, it is less informative when class imbalance exists.
+- *Accuracy*: The proportion of correct predictions.
+- *Precision*: The proportion of correct predictions among all tweets the model labeled as a given class. 
+- *Recall*: The proportion of actual sentiment instances that were correctly identified. 
+- *F1 Score*: The harmonic mean of precision and recall. 
 
-- *Precision*: The proportion of correct predictions among all tweets the model labeled as a given class.High precision for the negative  class is especially important to avoid raising false alerts.
-
-- *Recall*: The proportion of actual sentiment instances that were correctly identified. High recall ensures the model captures most frustrated or escalated tweets.
-
-- *F1 Score*: The harmonic mean of precision and recall. This is especially useful in sentiment analysis, where both false positives and false negatives can lead to operational issues (e.g., missing angry customers or falsely escalating satisfied ones).
-
-These metrics were selected to account for class imbalance, which is common in sentiment datasets. For instance, neutral tweets often dominate volume, while negative tweets are more operationally important in customer service. Therefore, we paid close attention to class-specific precision and recall, especially for the negative class, to ensure that frustrated customer messages were identified without over-triggering on neutral ones [@barik2024ivader; @gandy2025public].
+These metrics were selected to account for class imbalance, which is common in sentiment data sets. For instance, neutral tweets often dominate volume, while negative tweets are more operationally important in customer service. Therefore, we paid close attention to class-specific precision and recall, especially for the negative class, to ensure that frustrated customer messages were identified without over-triggering on neutral ones [@barik2024ivader; @gandy2025public].
 
 > *Note: Some parts of this project were assisted by ChatGPT for writing support and citation formatting. All content was reviewed and edited by the authors to ensure accuracy and originality.*
 
 
 ## Analysis and Results
-
-### Data Exploration and Visualization
-
-The data was sourced from Kaggle’s Customer Support on Twitter dataset, which contains over 2.8 million tweets between customers and major companies. Each entry includes:
-
-- Tweet text
-
-- Author ID
-
-- Timestamp
-
-- Inbound or outbound label 
-
-- Associated response tweet ID 
-
-Note: Response_tweet_id and in_response_to_tweet_id contained a high number of missing values, these were not relevant to the sentiment classification task and were not used in downstream modeling.
-<br>
-
-To prepare the data for analysis, the tweet text was cleaned by removing URLs, mentions, hashtags, punctuation, and stopwords. The tweets were then labeled using the VADER sentiment analyzer, assigning a compound score ranging from -1 (most negative) to +1 (most positive).
-
-After applying VADER, the sentiment distribution across all tweets was: 53.3% Positive, 26.0% Neutral, and 20.7% Negative. This distribution reflects the generally service-oriented tone of support conversations, with a notable proportion of unresolved or escalated issues.
-
-```{r, echo=FALSE, out.width="70%", fig.cap="Figure: Sentiment Distribution of Customer Support Tweets"}
-knitr::include_graphics("sentiment_distribution.png")
-```
-
-One surprising find was the high percentage of positive inbound tweets. While we expected more complaints or frustration, it appears many customers tweet to thank support agents after resolution. Additionally, predefined responses from companies (“Please send us a DM...”) likely contribute to a more neutral or polite tone overall.
-
-However, frequent use of words like “still,” “waiting,” and “no response” did appear in the negative tweets, often paired with emojis or punctuation, highlighting specific customer pain points in response time and resolution.
-
-<div style="text-align: center;">
-  <img src="PosWC.png" width="70%">
-  <img src="NuWC.png" width="75%">
-  <img src="NegWC.png" width="70%">
-  <p><strong>Figure:</strong> Word Clouds by Sentiment Class – Positive, Neutral, and Negative</p>
-</div>
-<br>
-
-**The next steps will involve:**
-
-- TF-IDF vectorization
-- XGBoost classification modeling
-- Model performance evaluation (accuracy, precision, recall, F1)
-
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # loading packages 
@@ -248,30 +211,134 @@ library(ggrepel)
 library(dslabs)
 ```
 
-```{r, warning=FALSE, echo=TRUE}
+```{python, message=FALSE}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
+### Data Exploration and Visualization
+
+Following the development of our preprocessing and modeling pipeline, we analyzed how our system performed and what the data revealed when applied to real-world support tweets. Our goal was to build a model that can classify the sentiment of a customer support tweet using its text. We focused on this problem because understanding tone in real time could help companies:
+
+-	Prioritize angry customers
+-	Track service tone trends over time
+-	And even alert managers to potential PR issues
+
+To conduct this analysis, we used the Customer Support on Twitter dataset from Kaggle, which contains over 2.8 million tweets exchanged between customers and major companies such as Apple, Amazon, and Comcast. Each record includes:
+
+-	tweet_id (unique identifier)
+-	author_id (sender identifier)
+-	created_at (timestamp)
+-	text (tweet content)
+-	inbound (flag customer = TRUE or company = FALSE)
+-	response_tweet_id and in_response_to_tweet_id (for tracking conversation threads)
+
+```{python}
 # Load Data
-  
-
+df = pd.read_csv("twcs/twcs.csv", low_memory=False)
+df.sample(5)
 ```
 
-### Modeling and Results
+#### Initial Data Exploration and Cleaning
 
--   Explain your data preprocessing and cleaning steps.
+A review of the data set revealed that while core fields like text, created_at, and inbound had no missing values, over one million records were missing response_tweet_id, and over 700,000 were missing in_response_to_tweet_id. These were not relevant to the sentiment classification task or used in downstream modeling so they were excluded from modeling.
 
--   Present your key findings in a clear and concise manner.
+For pre-processing, the tweet text was cleaned by removing URLs, mentions, hashtags. The tweets were then labeled using VADER sentiment analyzer, to assign a compound score ranging from -1 (most negative) to +1 (most positive). 
 
--   Use visuals to support your claims.
+#### Sentiment Distribution
 
--   **Tell a story about what the data reveals.**
+After labeling, we used VADER thresholds to categorized each tweet as Positive, Neutral, or Negative. The resulting sentiment distribution was: 
 
-```{r}
+* Positive: 51.7% 
+* Neutral: 24.6% 
+* Negative: 23.7% 
 
-```
+<Insert Pie Chart>
+![Sentiment Distribution](Graphs/PieChart.png)
 
-### Conclusion
 
--   Summarize your key findings.
+Interestingly, we found a high percentage of positive tweets contradicting our initial expectation to find most support messages to be complaints or frustration. Upon further review, it appears many customers tweet to thank support agents after resolution and predefined responses from companies (“Please send us a DM”) likely contribute to a more neutral and positive tone due to their polite structure.
 
--   Discuss the implications of your results.
+
+<Insert breakdown of inbound/outbound visual>
+![Sentiment Breakdown by Inbound/Outbound Tweets](Graphs/Inbound - Outbound Breakdown.png)
+
+To explore vocabulary trends across sentiment classes, we generated word clouds for each category.
+
+-	Positive tweets frequently used terms such as “thank,” “help,” “happy,”.
+-	Neutral tweets often included formal language or template replies like “DM” or “update”, “check”.
+-	Negative tweets prominently featured words such as “sorry,” “problem,” “customer service”.
+
+<Insert Word Clouds>
+![Word Clouds](Graphs/Word Cloud - Pos.png)
+![Word Cloud Neutral](Graphs/Word Cloud - Neu.png)
+
+![Word Cloud Negative](Graphs/Word Cloud - Neg.png)
+
+These linguistic cues confirmed that customers often use strong tonal indicators in emotionally charged messages and brands employ consistent phrasing in templated outbound communication.
+
+#### Modeling Pipeline Performance
+
+After labeling each tweet with a sentiment category using VADER, we prepared the data set for supervised classification by extracting numerical features using TF-IDF. In order to tokenize and vectorize the text, we had to preprocess the text again, this time removing all special characters, lowercasing all text, and removing stop words in addition to what was already removed for VADER. We used TF-IDF with n-grams(up to 2 words) and a vocabulary size capped at 5,000 features to transform the text into sparse numeric vectors. The final TF-IDF matrix was sparse and high-dimensional, well-suited for XGBoost, our classifier of choice. Sentiment labels were then encoded, and we trained XGBoost on stratified, balanced sample of 150,000 tweets (50k per class) to address class imbalance. 
+
+We split the dataset into 80% training and 20% testing subsets, maintaining class proportions with stratification. To improve recall on Negative tweets (a minority class), we applied sample weighting based on class distribution.
+
+### Final Results:
+
+On a test set of 562,355 tweets, the final model achieved the following metrics:
+
+|**Metric** |	**Value** |
+|-----------|-----------|
+|Accuracy   |	77.10%    |
+|Precision  |	80.96%    |
+|Recall     |	77.10%    |
+|F1-Score   |	77.45%    |
+
+<br>
+
+**Per-Class Performance:**
+
+|**Sentiment** |	**Precision** |	**Recall** |	**F1-Score** |
+|--------------|----------------|------------|---------------|
+|Negative      |	0.74          |	0.68	     |  0.71         |
+|Neutral       |	0.62          |	0.95       |	0.75         |
+|Positive      |	0.93          |	0.73       |	0.82         |
+			
+We observed improved recall on the Negative class, up from 64% in an unweighted model previously used to 68%. This aligns with our goal of better identifying dissatisfied customers. Although overall accuracy slightly decreased, the model became more balanced across classes. The final model achieved balanced accuracy across classes, with improved recall for Negative tweets. VADER combined with machine learning produced strong results, and visualizations revealed tone differences between customers and companies.
+
+<insert confusion matrix>
+![Confustion Matrix](Graphs/Confusion Matrix.png)
+
+The confusion matrix shows that the model performed best in predicting positive sentiment, which is the majority class. However, it also achieved reasonable precision and recall for negative sentiment, a critical class in customer support where failure to flag dissatisfaction can be costly.
+
+
+## Conclusion
+This project successfully demonstrates a scalable, interpretable approach to sentiment classification in customer support analytics by combining VADER, TF-IDF, and XGBoost. VADER provided fast sentiment labeling, while TF-IDF and XGBoost transformed those labels into a high-performing supervised model. The final model achieved strong results across metrics — 77.1% accuracy, 80.9% precision, and 77.4% F1-score — with particularly strong performance in identifying both positive and negative sentiment.
+
+Notably, the model improved recall on the Negative class after applying class weights, enhancing the model's ability to flag frustrated customers — an essential goal for applications in customer care.
+
+#### Implications
+By automating tone detection in real-time support channels, this framework offers immediate business value by enabling:
+
+-	Automatically flag high-risk interactions for escalation or human intervention.
+-	Quality monitoring, performance reviews, or workflow improvements based on interaction tone over time.
+
+#### Limitations / Future Work
+Despite its strengths, the system has a few limitations:
+
+-	Ambiguity and Sarcasm: Tweets lacking explicit emotional language or containing sarcasm can confuse both VADER and XGBoost.
+- Context Awareness: The model analyzes each tweet, without conversation context or threading. 
+-	Static Lexicon: VADER does not learn from context, restricting its adaptability to evolving internet slang or brand-specific interactions without manual updates. 
+
+To address these challenges, future enhancements could include:
+
+-	Handling sarcasm or ambiguous sentiment using deep learning models.
+-	Incorporating metadata (e.g., brand, time of day, response time)
+-	Expanding to multilingual support for broader application.
+
+Together, these improvements could transform this research into an actionable solution for tone detection and sentiment-driven customer experience optimization.
+
 
 ## References
