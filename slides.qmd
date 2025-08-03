@@ -1,8 +1,8 @@
 ---
-title: "Present a great story for data science projects"
-subtitle: "This is a Slide Template"
-author: "Students names (Advisor: Dr. Cohen)"
-date: '`r Sys.Date()`'
+title: "Tone Matters: Sentiment Classification of Support Tweets Using VADER and XGBoost"
+subtitle: ""
+author: "Samantha Chickeletti & Michael Alfrey (Advisor: Dr. Cohen)"
+date: "`r Sys.Date()`"
 format:
   revealjs
 course: Capstone Projects in Data Science
@@ -17,35 +17,92 @@ editor:
     wrap: 72
 ---
 
-::: callout-important
-**Remember:** Your goal is to make your audience understand and care
-about your findings. By crafting a compelling story, you can effectively
-communicate the value of your data science project.
+# Introduction  {.smaller}
+<!-- Section 2, Introduction -->
+- Motivation and Context 
+- VADER for Social Media Sentiment
+- Machine Learning Extension with XGBoost
+- Dataset Overview
+- Literature-Informed Methodology
+- Literature Review
+- Transition to Methods
+---
 
-Carefully read this template since it has instructions and tips to
-writing!
+## Motivation and Context  {.smaller}
+<!-- Subsection 2.1, Motivation and Context -->
+In today’s digital landscape, customer support conversations increasingly take place over chat and social media platforms. These short-form exchanges are often emotionally charged and can signal a customer’s satisfaction, frustration, or potential escalation. Understanding the emotional tone behind these messages is critical for improving service quality, anticipating customer needs, and enhancing the overall customer experience. Yet, analyzing this kind of shorthand-heavy language presents a unique challenge for traditional sentiment analysis models.
+---
 
-More information about `revealjs`:
-<https://quarto.org/docs/reference/formats/presentations/revealjs.html>
-:::
+## VADER for Social Media Sentiment  {.smaller}
+<!-- Subsection 2.2, VADER for Social Media Sentiment -->
+This project explores how VADER (Valence Aware Dictionary for sEntiment Reasoning), a lexicon-based sentiment analysis tool, can classify tone in real customer support messages [@hutto2014vader]. Its design prioritizes speed and interpretability, making it ideal for short, informal content like tweets and chat messages. VADER’s scoring mechanism is particularly sensitive to social media features such as emojis, capitalization, and punctuation, which are often critical to conveying tone in these environments [@barik2024vader].
+---
 
-## Introduction  {.smaller}
+## Machine Learning Extension with XGBoost  {.smaller}
+<!-- Subsection 2.3, Machine Learning Extension with XGBoost -->
+To build a full machine learning pipeline around VADER, we will use its sentiment scores (positive, neutral, negative) as labels and train an XGBoost classifier using TF-IDF features extracted from the message text. XGBoost is well-suited for this task because it performs efficiently with sparse, high-dimensional data and eliminates the need to hand-label messages or train a separate sentiment model from scratch.
+---
 
--   Develop a storyline that captures attention and maintains interest.
+## Dataset Overview  {.smaller}
+<!-- Subsection 2.4, Dataset Overview -->
+The dataset selected for this project is the “Customer Support on Twitter” dataset from Kaggle, which contains real-world support interactions between users and brands such as Apple, Amazon, and Comcast. The messages are short, informal, and emotionally expressive—closely mirroring real-world customer support scenarios—and make the dataset ideal for sentiment analysis and predictive modeling.
+---
 
--   Your audience is your peers
+## Literature-Informed Methodology  {.smaller}
+<!-- Subsection 2.5, Literature-Informed Methodology -->
+Natural Language Processing (NLP) has become a vital tool for understanding customer sentiment across digital platforms. A variety of approaches have been proposed in the literature, from lexicon-based models such as VADER to machine learning methods like XGBoost. This review highlights the studies that informed the methodological design of our project.
+---
 
--   Clearly state the problem or question you're addressing.
+## Literature Review  {.smaller}
+<!-- Subsection 2.6, Literature Review -->
+- Lexicon-Based Methods for Sentiment Analysis
+- Machine Learning for Sentiment Classification
+---
 
--   Introduce why it is relevant needs.
+### Lexicon-Based Methods for Sentiment Analysis  {.smaller}
+<!-- Subsection 2.6.1, Lexicon-Based Methods for Sentiment Analysis -->
+- Why VADER Works Well on Tweets 
+- VADER in the Literature
+---
 
--   Provide an overview of your approach.
+#### Why VADER Works Well on Tweets   {.smaller}
+<!-- Subsection 2.6.1.1, Why VADER Works Well on Tweets  -->
+Lexicon based methods remain a powerful choice for analyzing short, informal messages. VADER is particularly effective because it incorporates key linguistic signals such as:
 
-In kernel estimator, weight function is known as kernel function
-[@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]\*
+- Capitalization: (e.g., `"AWESOME"` → increases intensity)
+- Punctuation: (e.g., `!` → amplifies sentiment)
+- Slang, emojis, and emoticons: (e.g., `:)` → amplifies sentiment)
+- Negation: (e.g., `"not good"` → polarity reversal)
 
-## Methods
+These elements help capture the nuanced sentiment found in customer service conversations that traditional lexicon models may often miss. 
+---
+
+#### VADER in the Literature   {.smaller}
+<!-- Subsection 2.6.1.2, VADER in the Literature  -->
+Recent research continues to support and expand on VADER's use. Barik and Misra [@barik2024vader] evaluated an improved VADER lexicon in analyzing e-commerce reviews and emphasized its interpretability and processing speed. Chadha and Aryan [@chadha2023vader] also confirmed VADER’s reliability in sentiment classification tasks, noting its effectiveness in fast-paced business contexts. Youvan [@youvan2024vader] offered a comprehensive review of VADER’s core logic, highlighting its treatment of intensifiers, negations, and informal expressions.
+---
+
+### Machine Learning for Sentiment Classification  {.smaller}
+<!-- Subsection 2.6.2, Machine Learning for Sentiment Classification -->
+- Limitations of Lexicons
+- Why We Use XGBoost
+---
+
+#### Limitations of Lexicons  {.smaller}
+<!-- Subsection 2.6.2.1, Limitations of Lexicons  -->
+While VADER is powerful, it's limited to its predefined lexicon and rule set. To complement VADER’s labeling, we incorporate XGBoost, an efficient and scalable gradient boosting algorithm, as a supervised classifier.
+---
+
+#### Why We Use XGBoost  {.smaller}
+<!-- Subsection 2.6.2.2, Why We Use XGBoost  -->
+Lestari et al. [@lestari2025xgboost] compared XGBoost with AdaBoost for movie review classification and found XGBoost achieved higher accuracy and generalizability. Sefara and Rangata [@sefara2024domain] also found XGBoost to be the most effective model for classifying domain-specific tweets, outperforming Logistic Regression and SVM in both performance and efficiency. Lu and Schelle [@lu2025tesla] demonstrated how XGBoost could be used to extract interpretable feature importance from tweet sentiment, providing a compelling case for our approach.
+---
+
+## Tranition to Methods  {.smaller}
+<!-- Subsection 2.7, Tranition to Methods  -->
+---
+
+# Methods
 
 -   Detail the models or algorithms used.
 
