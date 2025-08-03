@@ -22,8 +22,8 @@ Slides: [slides.html](slides.html){target="_blank"} ( Go to `slides.qmd`
 to edit)
 
 
+<!-- Section 2 -->
 ## Introduction
-
 In today’s digital landscape, customer support conversations increasingly take place over chat and social media platforms. These short-form exchanges are often emotionally charged and can signal a customer’s satisfaction, frustration, or potential escalation. Understanding the emotional tone behind these messages is critical for improving service quality, anticipating customer needs, and enhancing the overall customer experience. Yet, analyzing this kind of shorthand-heavy language presents a unique challenge for traditional sentiment analysis models.
 
 This project explores how VADER (Valence Aware Dictionary for sEntiment Reasoning), a lexicon-based sentiment analysis tool, can classify tone in real customer support messages [@hutto2014vader]. Its design prioritizes speed and interpretability, making it ideal for short, informal content like tweets and chat messages. VADER’s scoring mechanism is particularly sensitive to social media features such as emojis, capitalization, and punctuation, which are often critical to conveying tone in these environments [@barik2024vader].
@@ -140,8 +140,8 @@ $$
 This process highlights terms that are both prominent in a tweet and distinctive across the dataset, making TF-IDF a powerful and interpretable technique for feature extraction in sentiment analysis pipelines [@barik2024vader]. With our feature matrix ready, we proceeded to modeling.
 
 
-#### Extreme Gradient Boosting (XGBoost) 
-To model sentiment classifications based on TF-IDF features, we employ XGBoost (Extreme Gradient Boosting), a scalable and regularized tree ensemble algorithm designed for both accuracy and efficiency. XGBoost builds an additive model by iteratively constructing decision trees that minimize a regularized objective function, which balances prediction accuracy with model simplicity. The objective consists of two components: a convex loss function that measures how well the model fits the data, and a regularization term that penalizes overly complex trees.
+#### eXtreme Gradient Boosting (XGBoost) 
+To model sentiment classifications based on TF-IDF features, we employ XGBoost (eXtreme Gradient Boosting), a scalable and regularized tree ensemble algorithm designed for both accuracy and efficiency. XGBoost builds an additive model by iteratively constructing decision trees that minimize a regularized objective function, which balances prediction accuracy with model simplicity. The objective consists of two components: a convex loss function that measures how well the model fits the data, and a regularization term that penalizes overly complex trees.
 <br>
 Each predicted class label $\hat{y}_i$ (positive, neutral, negative) is computed as the sum of outputs from $K$ trees:<br>
 $$

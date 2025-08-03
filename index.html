@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Samantha Chickeletti &amp; Michael Alfrey (Advisor: Dr. Cohen)">
-<meta name="dcterms.date" content="2025-08-02">
+<meta name="dcterms.date" content="2025-08-03">
 
 <title>Tone Matters: Sentiment Classification of Support Tweets Using VADER and XGBoost</title>
 <style>
@@ -3262,7 +3262,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 2, 2025</p>
+      <p class="date">August 3, 2025</p>
     </div>
   </div>
   
@@ -3275,6 +3275,7 @@ window.Quarto = {
 
 
 <p>Slides: <a href="slides.html" target="_blank">slides.html</a> ( Go to <code>slides.qmd</code> to edit)</p>
+<!-- Section 2 -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>In today’s digital landscape, customer support conversations increasingly take place over chat and social media platforms. These short-form exchanges are often emotionally charged and can signal a customer’s satisfaction, frustration, or potential escalation. Understanding the emotional tone behind these messages is critical for improving service quality, anticipating customer needs, and enhancing the overall customer experience. Yet, analyzing this kind of shorthand-heavy language presents a unique challenge for traditional sentiment analysis models.</p>
@@ -3403,8 +3404,8 @@ window.Quarto = {
 <p>This process highlights terms that are both prominent in a tweet and distinctive across the dataset, making TF-IDF a powerful and interpretable technique for feature extraction in sentiment analysis pipelines <span class="citation" data-cites="barik2024vader">(<a href="#ref-barik2024vader" role="doc-biblioref">K. Barik and Misra 2024</a>)</span>. With our feature matrix ready, we proceeded to modeling.</p>
 </section>
 <section id="extreme-gradient-boosting-xgboost" class="level4">
-<h4 class="anchored" data-anchor-id="extreme-gradient-boosting-xgboost">Extreme Gradient Boosting (XGBoost)</h4>
-<p>To model sentiment classifications based on TF-IDF features, we employ XGBoost (Extreme Gradient Boosting), a scalable and regularized tree ensemble algorithm designed for both accuracy and efficiency. XGBoost builds an additive model by iteratively constructing decision trees that minimize a regularized objective function, which balances prediction accuracy with model simplicity. The objective consists of two components: a convex loss function that measures how well the model fits the data, and a regularization term that penalizes overly complex trees. <br> Each predicted class label <span class="math inline">\(\hat{y}_i\)</span> (positive, neutral, negative) is computed as the sum of outputs from <span class="math inline">\(K\)</span> trees:<br> <span class="math display">\[
+<h4 class="anchored" data-anchor-id="extreme-gradient-boosting-xgboost">eXtreme Gradient Boosting (XGBoost)</h4>
+<p>To model sentiment classifications based on TF-IDF features, we employ XGBoost (eXtreme Gradient Boosting), a scalable and regularized tree ensemble algorithm designed for both accuracy and efficiency. XGBoost builds an additive model by iteratively constructing decision trees that minimize a regularized objective function, which balances prediction accuracy with model simplicity. The objective consists of two components: a convex loss function that measures how well the model fits the data, and a regularization term that penalizes overly complex trees. <br> Each predicted class label <span class="math inline">\(\hat{y}_i\)</span> (positive, neutral, negative) is computed as the sum of outputs from <span class="math inline">\(K\)</span> trees:<br> <span class="math display">\[
 \hat{y}_i = \phi(x_i) = \sum_{k=1}^K f_k(x_i), \quad f_k \in \mathcal{F}
 \]</span></p>
 <p>Where: <br> • <span class="math inline">\(x_i\)</span>: The input TF-IDF vector for tweet <span class="math inline">\(i\)</span> <br> • <span class="math inline">\(f_k(x_i)\)</span>: The prediction from the <span class="math inline">\(k^\text{th}\)</span> tree for input <span class="math inline">\(x_i\)</span> <br> • <span class="math inline">\(\sum_{k=1}^K f_k(x_i)\)</span>: The sum of predictions for each class <br> • <span class="math inline">\(\phi(x_i)\)</span>: The combined prediction from all trees <br></p>
@@ -3480,11 +3481,11 @@ window.Quarto = {
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>         tweet_id     author_id  ...  response_tweet_id in_response_to_tweet_id
-2296977   2462295  comcastcares  ...                NaN               2462296.0
-2624916   2797255        329292  ...    2797253,2797256                     NaN
-1598259   1751485  AppleSupport  ...                NaN               1751486.0
-324684     372160        204169  ...             372162                372159.0
-898968     998484        356434  ...             998483                     NaN
+1234951   1363199  AppleSupport  ...                NaN               1363196.0
+986530    1093867  comcastcares  ...                NaN               1093868.0
+2724326   2899478        803269  ...            2899477               2899479.0
+83677      106860       SW_Help  ...      106861,106862                106863.0
+746036     833678        318527  ...             833677                     NaN
 
 [5 rows x 7 columns]</code></pre>
 </div>
