@@ -28,9 +28,17 @@ editor:
 - Transition to Methods
 ---
 
-## Motivation and Context  {.smaller}
+## Motivation and Context: Why Tone Matters  {.smaller}
 <!-- Subsection 2.1, Motivation and Context -->
-In today’s digital landscape, customer support conversations increasingly take place over chat and social media platforms. These short-form exchanges are often emotionally charged and can signal a customer’s satisfaction, frustration, or potential escalation. Understanding the emotional tone behind these messages is critical for improving service quality, anticipating customer needs, and enhancing the overall customer experience. Yet, analyzing this kind of shorthand-heavy language presents a unique challenge for traditional sentiment analysis models.
+In today’s digital landscape, customer support conversations increasingly take place over chat and social media platforms. These short-form exchanges are often emotionally charged and can signal a customer’s satisfaction, frustration, or potential escalation. 
+Understanding the emotional tone behind these messages can: 
+
+- Improving service quality
+- Anticipating customer needs
+- Enhance the overall customer experience
+
+Yet, analyzing this kind of shorthand-heavy language presents a unique challenge for traditional sentiment analysis models.
+
 ---
 
 ## VADER for Social Media Sentiment  {.smaller}
@@ -98,7 +106,7 @@ While VADER is powerful, it's limited to its predefined lexicon and rule set. To
 Lestari et al. [@lestari2025xgboost] compared XGBoost with AdaBoost for movie review classification and found XGBoost achieved higher accuracy and generalizability. Sefara and Rangata [@sefara2024domain] also found XGBoost to be the most effective model for classifying domain-specific tweets, outperforming Logistic Regression and SVM in both performance and efficiency. Lu and Schelle [@lu2025tesla] demonstrated how XGBoost could be used to extract interpretable feature importance from tweet sentiment, providing a compelling case for our approach.
 ---
 
-## Tranition to Methods  {.smaller}
+## Transition to Methods  {.smaller}
 <!-- Subsection 2.7, Tranition to Methods  -->
 ---
 
@@ -153,7 +161,7 @@ This automated labeling process served as the backbone for our supervised classi
 <!-- Section 3.1.4, Worked Example: VADER in Action  -->
 For example, a tweet reading: 
 
->> "I’ve been delayed over an HOUR and STILL no response… this is ridiculous!!!"
+> "I’ve been delayed over an HOUR and STILL no response… this is ridiculous!!!"
 <br>
 
 #### Example VADER Scoring:
@@ -179,7 +187,8 @@ By relying on VADER instead of manual annotation, we create a foundation for dow
 - Calculating Term Frequency (TF)
 - Calculating Inverse Document Frequency (IDF)
 - Final TF-IDF Weighting
-- Why TF-IDF Works Well for Sentiment Features
+- Why TF-IDF Works Well for Sentiment Features 
+<br>
 ---
 
 ### Representing Text as Features with TF-IDF
@@ -306,7 +315,7 @@ $$
 <!-- Section 3.3.6, Efficiency and Interpretability   -->
 Therefore, by combining a strong predictive loss with a tree-specific complexity penalty, XGBoost is able to generalize well to new data, outperforming simpler models while remaining computationally efficient [@Chen_2016]. It also provides feature importance scores, offering insights into which terms most influence predictions—a valuable asset for customer service teams seeking actionable feedback. 
 
-With the model trained, we evaluated its performance using several classification metrics.
+With the model trained, we evaluated its performance using several classification metrics. <br>
 ---
 
 ## Evaluation Metrics
@@ -336,67 +345,185 @@ Note: Some parts of this project were assisted by ChatGPT for writing support an
 ---
 
 
+# Analysis and Results
+<!-- Section 4, Analysis and Results  -->
 
-
-## Data Exploration and Visualization
-
--   Describe your data sources and collection process.
-
--   Present initial findings and insights through visualizations.
-
--   Highlight unexpected patterns or anomalies.
+---
 
 ## Data Exploration and Visualization {.smaller}
 
-A study was conducted to determine how...
-
-```{r, warning=FALSE, echo=F, message=FALSE}
-# loading packages 
-library(tidyverse)
-library(knitr)
-library(ggthemes)
-library(ggrepel)
-library(dslabs)
-```
-
-```{r, warning=FALSE, echo=F}
-# Load Data
-#kable(head(murders))
-
-ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total)) 
-
-  ggplot1 + geom_point(aes(col=region), size = 4) +
-  geom_text_repel(aes(label=abb)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(formula = "y~x", method=lm,se = F)+
-  xlab("Populations in millions (log10 scale)") + 
-  ylab("Total number of murders (log10 scale)") +
-  ggtitle("US Gun Murders in 2010") +
-  scale_color_discrete(name = "Region")+
-      theme_bw()
+- Source: *Customer Support on Twitter* (Kaggle)
+- 2.8M tweets exchanged between customers and major companies
+- Fields used:
+  - `text`
+  - `created_at`
+  - `inbound` (customer or company)
+  - Metadata for threading (excluded from modeling) 
+  <br>
   
+---
 
+## Preprocessing & Sentiment Labeling {.smaller}
+
+:::: {.columns}
+
+::: {.column width="55%"}
+
+- Removed: URLs, mentions, hashtags  
+- Used **VADER** to assign compound sentiment scores  
+- Sentiment Distribution (VADER Labels):  
+  - **Positive**: 51.7%  
+  - **Neutral**: 24.6%  
+  - **Negative**: 23.7%  
+
+Surprising number of positive tweets due to resolution acknowledgments and polite brand replies.
+:::
+
+::: {.column width="45%"}
+
+<div style="display: flex; align-items: center; height: 100%;">
+  <img src="Graphs/PieChart.png" style="max-width: 100%; max-height: 100%;">
+</div>
+
+:::
+::::
+
+---
+
+## Tone Differences by Sentiment {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- **Positive**: Thank, help, happy  
+- **Neutral**: DM, issue, Hi  
+- **Negative**: sorry, problem, now
+
+```{r, echo=FALSE, out.width="85%"}
+knitr::include_graphics("Graphs/Word Cloud - Pos.png")
 ```
+:::
 
-## Modeling and Results
+::: {.column width="50%"}
 
--   Explain your data preprocessing and cleaning steps.
-
--   Present your key findings in a clear and concise manner.
-
--   Use visuals to support your claims.
-
--   **Tell a story about what the data reveals.**
-
-```{r}
-
+```{r, echo=FALSE, out.width="85%"}
+knitr::include_graphics("Graphs/Word Cloud - Neu.png")
 ```
+```{r, echo=FALSE, out.width="85%"}
+knitr::include_graphics("Graphs/Word Cloud - Neg.png")
+```
+<p style="font-size: 14px; color: gray; align-items: right;">Figure: Word clouds by sentiment class</p>
 
-## Conclusion
+:::
+::::
 
--   Summarize your key findings.
+---
 
--   Discuss the implications of your results.
+## TF-IDF and Feature Vectorization {.smaller}
+
+
+#### Preparing for Modeling
+- Cleaned again for vectorization: lowercased, removed stopwords, special characters, URLs, mentions, hashtags  
+- Applied **TF-IDF** (n-grams up to 2 words, 5,000 features)
+- Result: sparse matrix well-suited for XGBoost
+
+> TF-IDF highlights important and rare terms across tweets
+
+---
+
+## Modeling Pipeline {.smaller}
+
+- Classifier: **XGBoost**
+- Training data: 150,000 tweets (50k per class, stratified)
+- Test set: 562,355 tweets
+- Applied **class weighting** to improve recall for Negative tweets
+
+---
+
+## Overall Performance {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+#### Final Model Results
+
+| Metric    | Value     |
+|-----------|-----------|
+| Accuracy  | 77.1%     |
+| Precision | 80.96%    |
+| Recall    | 77.1%     |
+| F1 Score  | 77.45%    |
+
+> Balanced performance, with emphasis on improving recall for negative sentiment
+
+:::
+
+::: {.column width="50%"}
+```{r, echo=FALSE, out.width="90%"}
+knitr::include_graphics("Graphs/Confusion Matrix.png")
+```
+:::
+::::
+
+---
+
+## Class-Level Performance {.smaller}
+
+| Sentiment | Precision | Recall | F1 Score |
+|-----------|-----------|--------|----------|
+| Negative  | 0.74      | 0.68   | 0.71     |
+| Neutral   | 0.62      | 0.95   | 0.75     |
+| Positive  | 0.93      | 0.73   | 0.82     |
+<br>
+
+- High **recall for Neutral** (templated replies)
+
+- High **precision for Positive**
+
+- Improved **recall for Negative** from 64% → 68%
+
+> A key goal: identifying dissatisfaction more reliably. <br>
+Recall on **Negative tweets** improved from 64% → 68% using sample weighting
+
+---
+
+## Key Takeaways {.smaller}
+
+**Business Impact**
+
+  - Flags high-risk conversations in real-time
+  - Service quality tracking
+  - Enhance escalation workflows
+
+**Limitations:**
+
+  - Trained on Twitter, performance may vary on email or chat
+  - No conversation context
+  - Struggles with sarcasm
+  - VADER lexicon is static
+
+**Future Work:**
+
+  - Add threading/context
+  - Explore LLMs or deep learning
+  - Expand to multilingual support 
+
+---
+
+# Conclusion {.smaller}
+
+This project successfully demonstrated a scalable approach to sentiment classification in customer support conversations by combining VADER, TF-IDF, and XGBoost. VADER provided fast and interpretable sentiment labels tailored for informal social media language, which we used to train a high-performing supervised classifier. 
+
+Achieved:
+
+- 77% accuracy
+
+- 0.71 F1 for Negative tone
+
+- Fast, scalable tone detection
+
+By automating tone detection in real-time support channels, this framework offers immediate business value. It can help teams prioritize escalations, identify service bottlenecks, and monitor agent interactions at scale. Our findings confirm that interpretable, rule-based sentiment scoring (via VADER) can be successfully integrated with machine learning to support responsive, tone-aware customer engagement.
 
 ## References
