@@ -3,3 +3,12 @@
 .RData
 .Ruserdata
 twcs/twcs.csv
+.RVersion
+*.pper
+*.json
+saved_source_markers
+persistent-state
+windowlayoutstate.pper
+files-pane.pper
+source-pane.pper
+workbench-pane.pper
