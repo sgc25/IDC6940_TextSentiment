@@ -106,8 +106,12 @@ While VADER is powerful, it's limited to its predefined lexicon and rule set. To
 Lestari et al. [@lestari2025xgboost] compared XGBoost with AdaBoost for movie review classification and found XGBoost achieved higher accuracy and generalizability. Sefara and Rangata [@sefara2024domain] also found XGBoost to be the most effective model for classifying domain-specific tweets, outperforming Logistic Regression and SVM in both performance and efficiency. Lu and Schelle [@lu2025tesla] demonstrated how XGBoost could be used to extract interpretable feature importance from tweet sentiment, providing a compelling case for our approach.
 ---
 
-## Transition to Methods  {.smaller}
-<!-- Subsection 2.7, Tranition to Methods  -->
+## Pipeline  {.smaller}
+<!-- Subsection 2.7, Pipeline -->
+
+```{r, echo=FALSE, out.width="90%", fig.align='center'}
+knitr::include_graphics("Graphs/Pipeline.png")
+```
 ---
 
 # Methods
@@ -430,6 +434,24 @@ knitr::include_graphics("Graphs/Word Cloud - Neg.png")
 
 > TF-IDF highlights important and rare terms across tweets
 
+---
+
+## TF-IDF and Feature Vectorization {.smaller}
+
+
+#### Top 20 Most Informative Terms
+```{r, echo=FALSE, out.width="90%"}
+knitr::include_graphics("Graphs/TF IDF Bar Chart.png")
+```
+---
+
+## TF-IDF and Feature Vectorization {.smaller}
+
+
+#### Top 20 Most Informative Terms
+- TF-IDF helps us identify which words are not just common, but actually important for telling tweets apart. It's like finding the loudest voices in a crowded room.
+- Words like ‘dm’, ‘help’, ‘thanks’, ‘sorry’, and ‘account’ highlight the nature of support conversations—many of which are requests for assistance, apologies, or follow-ups.
+- These high-weighted features help the XGBoost model detect tone and intent without needing deep semantic understanding. For example, the presence of words like ‘sorry’ and ‘delay’ may signal negative sentiment, while ‘thanks’ or ‘hi’ may suggest a positive or neutral interaction.
 ---
 
 ## Modeling Pipeline {.smaller}
