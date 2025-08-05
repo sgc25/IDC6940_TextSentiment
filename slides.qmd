@@ -22,8 +22,8 @@ editor:
 - Motivation and Context 
 - Our Approach: VADER and XGBoost
 - Dataset Overview
-- Literature-Informed Methodology
-- Transition to Methods
+- Methodological Foundations
+
 ---
 
 ## Motivation and Context: Why Tone Matters  {.smaller}
@@ -69,9 +69,11 @@ knitr::include_graphics("Graphs/DataSample.png")
 
 ---
 
-## Literature-Informed Methodology  {.smaller}
+## Methodological Foundations  {.smaller}
 <!-- Subsection 2.4, Literature-Informed Methodology -->
+
 Natural Language Processing (NLP) has become a vital tool for understanding customer sentiment across digital platforms. A variety of approaches have been proposed in the literature, from lexicon-based models such as VADER to machine learning methods like XGBoost. 
+<br>
 
 This review highlights the studies that informed the methodological design of our project.
 
@@ -98,7 +100,7 @@ VADER is particularly effective because it incorporates key linguistic signals s
 These elements help capture the nuanced sentiment found in customer service conversations that traditional lexicon models may often miss. 
 ---
 
-### VADER in the Literature {.smaller}
+## VADER in the Literature {.smaller}
 <!-- Subsection 2.4.1.2, VADER in the Literature  -->
 Recent research continues to support and expand on VADER's use. 
 
@@ -110,14 +112,14 @@ Recent research continues to support and expand on VADER's use.
 
 ---
 
-### Machine Learning Methods: Why XGBoost? {.smaller}
+## Machine Learning Methods: Why XGBoost? {.smaller}
 <!-- Subsection 2.4.2, Machine Learning for Sentiment Classification -->
 
-Limitations of Lexicons:
+**Limitations of Lexicons:**
 
 - While VADER is powerful, it's limited to its predefined lexicon and rule set. To complement VADER’s labeling, we incorporate XGBoost, an efficient and scalable gradient boosting algorithm, as a supervised classifier.
 
-Why We Use XGBoost:
+**Why XGBoost:**
 
 - Addresses VADER's limitations (e.g., static lexicon, rule-bound)
 
@@ -127,7 +129,7 @@ Why We Use XGBoost:
 
 ---
 
-### XGBoost in the Literature {.smaller}
+## XGBoost in the Literature {.smaller}
 <!-- Subsection 2.4.2.1, Why We Use XGBoost  -->
 - Lestari et al. [@lestari2025xgboost] compared XGBoost with AdaBoost for movie review classification and found XGBoost achieved higher accuracy and generalizability. 
 
@@ -137,102 +139,58 @@ Why We Use XGBoost:
 
 ---
 
-## Pipeline Overview  {.smaller}
-<!-- Subsection 2.5, Pipeline -->
-
-```{r, echo=FALSE, out.width="90%", fig.align='center'}
-knitr::include_graphics("Graphs/Pipeline.png")
-```
----
-
 # Methods
 <!-- Section 3, Methods  -->
-- Preprocessing and Sentiment Labeling with VADER
-- Term Frequency–Inverse Document Frequency (TF-IDF)
-- eXtreme Gradient Boosting (XGBoost) 
-- Evaluation Metrics
-- Authorship Note
+
+-VADER for initial sentiment labeling
+
+-Representing Text as Features with TF-IDF
+
+-XGBoost for supervised classification
+
+-Evaluated with Accuracy, Precision, Recall, and F1
+
 ---
 
-## Preprocessing and Sentiment Labeling with VADER
+## VADER for initial sentiment labeling {.smaller}
 <!-- Section 3.1, Preprocessing and Sentiment Labeling with VADER  -->
-- Text Cleaning and Normalization
-- Compound Sentiment Score Calculation
-- Sentiment Label Thresholds
-- Worked Example: VADER in Action
-- Automated Labeling for Supervised Learning
----
-
-### Text Cleaning and Normalization
-<!-- Section 3.1.1, Text Cleaning for VADER  -->
-Before applying VADER, our process began by cleaning the raw tweet text to ensure consistency. We removed URLs, user mentions, and hashtags. While VADER can handle informal text, this step was performed to improve text uniformity and prepare for downstream modeling.
----
-
-### Compound Sentiment Score Calculation
-<!-- Section 3.1.2, Compound Sentiment Score Calculation  -->
-After cleaning, we applied VADER to generate a compound sentiment score for each tweet and label tweets as Positive, Neutral, or Negative based on standardized thresholds. The compound sentiment score is computed as:
-
+- Removed URLs, mentions, hashtags for cleaner input  
+- Applied VADER to assign compound sentiment scores  
 $$
 \text{compound score} = \frac{\sum_{i=1}^{n} s_i}{\sqrt{\sum_{i=1}^{n} s_i^2} + \alpha}
 $$
-
-Where $s_i$ is the sentiment score for each word or token and $\alpha$ is a normalization constant (typically set to 15).
----
-
-### Sentiment Label Thresholds
-<!-- Section 3.1.3, Sentiment Label Thresholds  -->
-The final sentiment labels are then assigned using the following thresholds:
-
-* *Positive* if compound ≥ 0.05
-
-* *Neutral* if -0.05 < compound < 0.05
-
-* *Negative* if compound ≤ -0.05
-
+- Labeled tweets using VADER thresholds:  
+  - **Positive** ≥ 0.05  
+  - **Neutral** between -0.05 and 0.05  
+  - **Negative** ≤ -0.05  
+  
 This automated labeling process served as the backbone for our supervised classification model.
 ---
 
-### Worked Example: VADER in Action
-<!-- Section 3.1.4, Worked Example: VADER in Action  -->
+## VADER in Action {.smaller}
+<!-- Section 3.1.2, Worked Example: VADER in Action  -->
 For example, a tweet reading: 
 
 > "I’ve been delayed over an HOUR and STILL no response… this is ridiculous!!!"
-<br>
+
 
 #### Example VADER Scoring:
-| Feature         | Detected Element       | VADER Response                  |Score Impact |
-|----------------|------------------------|---------------------------------|-------------|
-| Capitalization | "HOUR", "STILL"        | Increases intensity             | -0.10       |
-| Punctuation    | "..." and "!!!"        | Amplifies negative sentiment    | -0.25       |
-| Lexicon Match  | "ridiculous"           | Strong negative valence         | -0.25       |
-| Overall Tone   | Complaint/frustration  | Strongly negative               | -0.15       |
-| **Final Compound**                      |                                 | **-0.75**   |
+| Feature           | Detected Element       | VADER Response              | Score Impact    |
+|-------------------|------------------------|-----------------------------|-----------------|
+|Capitalization     | "HOUR", "STILL"        | Increases intensity         | -0.10           |
+|Punctuation        | "..." and "!!!"        | Amplifies negative sentiment| -0.25           |
+|Lexicon Match      | "ridiculous"           | Strong negative valence     | -0.25           |
+|Overall Tone       | Complaint/frustration  | Negative valence            | -0.15           |
 
-This tweet produces a compound score of –0.75 and is labeled as negative, indicating a clear negative sentiment. 
----
-
-### Automated Labeling for Supervised Learning
-<!-- Section 3.1.5, Automated Labeling for Supervised Learning  -->
-By relying on VADER instead of manual annotation, we create a foundation for downstream supervised learning. This aligns with findings by Lu (2025), who demonstrated that VADER-labeled tweets combined with TF-IDF and XGBoost achieved performance comparable to manually labeled datasets [@lu2025tesla]. Next, we turn to feature extraction, to transform our labeled text into numerical form suitable for machine learning. 
----
-
-## Term Frequency–Inverse Document Frequency (TF-IDF)
-<!-- Section 3.2, Term Frequency–Inverse Document Frequency (TF-IDF)  -->
-- Representing Text as Features with TF-IDF
-- Calculating Term Frequency (TF)
-- Calculating Inverse Document Frequency (IDF)
-- Final TF-IDF Weighting
-- Why TF-IDF Works Well for Sentiment Features 
 <br>
+This tweet produces a **Final Compound** score of **-0.75** and is labeled as negative.
+
 ---
 
-### Representing Text as Features with TF-IDF
-<!-- Section 3.2.1, Representing Text as Features with TF-IDF  -->
+## Representing Text as Features with TF-IDF {.smaller}
+<!-- Section 3.2, Representing Text as Features with TF-IDF  -->
 To convert tweets into numerical features for modeling, we employ Term Frequency–Inverse Document Frequency (TF-IDF), a technique that quantifies how important each word is within the context of both the individual tweet and the overall corpus.
----
 
-### Calculating Term Frequency (TF)
-<!-- Section 3.2.2, Calculating Term Frequency (TF)  -->
 Term Frequency (TF) measures how often a word appears in a single tweet (i.e., domain) relative to the total number of words in that tweet:
 
 $$
@@ -243,159 +201,207 @@ Where:<br>
 	•	$w_n$ is the $n^{\text{th}}$ word in domain $d_m$ (a tweet) <br>
 	•	$g_{w_n}^{d_m}$ is the number of times word $w_n$ occurs in domain $d_m$ <br>
 	•	$T_{d_m}$ is the total number of words in domain $d_m$ <br>
+---
 
-Example:<br>
+## TF-IDF in Action {.smaller}
+<!-- Section 3.2.1, TF-IDF in Action  -->
+
 If the word delay appears twice in a 50-word tweet, its term frequency is:
 
 $$
 \text{TF}_{w_n} = \frac{2}{50} = 0.04
 $$
----
 
-### Calculating Inverse Document Frequency (IDF)
-<!-- Section 3.2.3, Calculating Inverse Document Frequency (IDF)  -->
 Inverse Document Frequency (IDF) evaluates how unique or informative a word is across the full set of tweets. Common words receive lower IDF scores, while rare or distinctive words receive higher scores:
 
 $$
 \text{IDF}_{w_n} = \log\left(\frac{T_{d_m}}{N_{w_n}}\right)
 $$
 
-
 Where: <br>
 	•	$N_{w_n}$ is the number of documents that contain word w_n <br>
 
-Example: <br>
+**Example:** <br>
 If *delay* appears in 5 out of 500,000 tweets, its IDF will be much higher than that of *hello*, which may appear in 10,000 tweets.
 ---
 
-### Final TF-IDF Weighting
-<!-- Section 3.2.4, Final TF-IDF Weighting  -->
+## Final TF-IDF Weighting {.smaller}
+<!-- Section 3.2.2, Final TF-IDF Weighting  -->
 Finally, TF-IDF combines these two metrics to weight each word by how frequently it appears in a tweet and how rare it is across the full dataset:
 
 $$
 \text{TF-IDF}_{w_n} = \text{TF}_{w_n} \times \text{IDF}_{w_n}
 $$
+**So why TF-IDF?**
+
+- Emotionally charged or unique words
+
+- Generates a sparse matrix ideal for boosting models
+
+
+This process highlights terms that are both prominent in a tweet and distinctive across the dataset, making TF-IDF a powerful and interpretable technique for feature extraction in sentiment analysis pipelines [@barik2024vader]. 
 ---
 
-### Why TF-IDF Works Well for Sentiment Features
-<!-- Section 3.2.5, Why TF-IDF Works Well for Sentiment Features  -->
-This process highlights terms that are both prominent in a tweet and distinctive across the dataset, making TF-IDF a powerful and interpretable technique for feature extraction in sentiment analysis pipelines [@barik2024vader]. With our feature matrix ready, we proceeded to modeling.
----
-
-## eXtreme Gradient Boosting (XGBoost) 
+## eXtreme Gradient Boosting (XGBoost) {.smaller} 
 <!-- Section 3.3, eXtreme Gradient Boosting (XGBoost)   -->
-- Modeling with eXtreme Gradient Boosting (XGBoost)
-- Predicting Sentiment from TF-IDF Input
-- Example: Classifying a Tweet with XGBoost
-- Training via Regularized Objective Function
-- Loss and Regularization Terms
-- Efficiency and Interpretability
+
+XGBoost (eXtreme Gradient Boosting), is a scalable and regularized tree ensemble algorithm designed for both accuracy and efficiency. It builds an additive model by iteratively constructing decision trees that minimize a regularized objective function, which balances prediction accuracy with model simplicity. 
+<br>
+
+The objective consists of two components: 
+
+- A convex loss function that measures how well the model fits the data
+
+- A regularization term that penalizes overly complex trees
+
 ---
 
-### Modeling with eXtreme Gradient Boosting (XGBoost)
-<!-- Section 3.3.1, Modeling with eXtreme Gradient Boosting (XGBoost)   -->
-To model sentiment classifications based on TF-IDF features, we employ XGBoost (eXtreme Gradient Boosting), a scalable and regularized tree ensemble algorithm designed for both accuracy and efficiency. XGBoost builds an additive model by iteratively constructing decision trees that minimize a regularized objective function, which balances prediction accuracy with model simplicity. The objective consists of two components: a convex loss function that measures how well the model fits the data, and a regularization term that penalizes overly complex trees.
----
+## XGBoost Prediction Equation {.smaller} 
 
-### Predicting Sentiment from TF-IDF Input
-<!-- Section 3.3.2, Predicting Sentiment from TF-IDF Input   -->
-Each predicted class label $\hat{y}_i$ (positive, neutral, negative) is computed as the sum of outputs from $K$ trees:<br>
+Each predicted class label $\hat{y}_i$ is computed as the sum of outputs from $K$ trees:
 $$
 \hat{y}_i = \phi(x_i) = \sum_{k=1}^K f_k(x_i), \quad f_k \in \mathcal{F}
 $$
+Where:  
 
-Where: <br>
-	•	$x_i$: The input TF-IDF vector for tweet $i$ <br>
-	•	$f_k(x_i)$: The prediction from the $k^\text{th}$ tree for input $x_i$ <br>
-	•	$\sum_{k=1}^K f_k(x_i)$: The sum of predictions for each class <br>
-	•	$\phi(x_i)$: The combined prediction from all trees <br>
+- $x_i$: Input TF-IDF vector for tweet $i$  
 
-This formula is foundational to XGBoost. It expresses how the final prediction is built up iteratively from multiple decision trees, which is the basis of boosting. In classifying sentiment labels, the accumulated scores are passed through a softmax functions to determine class probabilities.
+- $f_k(x_i)$: Prediction from $k^{\text{th}}$ tree  
+
+- $\phi(x_i)$: Combined prediction
+<br>
+This formula is foundational to XGBoost. 
+
+In classifying sentiment labels, the accumulated scores are passed through a softmax functions to determine class probabilities. 
+
 ---
 
-### Example: Classifying a Tweet with XGBoost
+## Classifying a Tweet with XGBoost {.smaller}
 <!-- Section 3.3.3, Example: Classifying a Tweet with XGBoost   -->
-Example: <br>
-Suppose we are using XGBoost to classify the sentiment of a tweet as positive, neutral, or negative, and the model has been trained with $K$ = 3 boosting rounds (trees) per class. <br>
-For a new input tweet $x_i,$ each of the 3 trees for each class outputs a score which is then summed for each class: <br>
-	•	Positive class score: 1.2 + 0.9 + 1.1 = 3.2 <br>
-	•	Neutral class score: 0.5 + 0.6 + 0.3 = 1.4 <br>
-	•	Negative class score: 0.8 + 0.7 + 0.6 = 2.1 <br>
-<br>
-Since the positive class has the highest total score, the model assigns the label positive. <br>
-<br>
+
+Assume we use 3 boosting rounds (trees) per class.
+
+For a new tweet $x_i$:
+
+- Positive score: $1.2 + 0.9 + 1.1 = 3.2$  
+- Neutral score: $0.5 + 0.6 + 0.3 = 1.4$  
+- Negative score: $0.8 + 0.7 + 0.6 = 2.1$
+
+> **Predicted label: Positive**, because it has the highest total score.
+
 ---
 
-### Training via Regularized Objective Function
+## Balancing Accuracy and Complexity {.smaller}
 <!-- Section 3.3.4, Training via Regularized Objective Function   -->
-Once prediction scores are computed, XGBoost must also determine how to train itself to make better predictions through the process of learning optimal tree structure. This is done by minimizing the regularized objective function, which balances prediction accuracy and model complexity: <br>
+::: {.columns}
+
+::: {.column width="50%"}
+
+**Objective Function:**
+
 $$
 \mathcal{L}(\phi) = \sum_{i} l(\hat{y}_i, y_i) + \sum_{k} \Omega(f_k)
 $$
+
+**Regularization Term:**
+
 $$
-\text{where }\Omega(f) = \gamma T + \frac{1}{2} \lambda \lVert w \rVert^2
+\Omega(f_k) = \gamma T + \frac{1}{2} \lambda \| w \|^2
 $$
----
-### Loss and Regularization Terms
-<!-- Section 3.3.5, Loss and Regularization Terms   -->
-  •	$l(y_i, \hat{y}_i)$ is our differentiable convex loss function (softmax loss for multiclass classification), measuring how far off the model’s prediction $\hat{y}_i$ is from the true label $y_i$.,<br>
-	•	$f_k$ is the $k^\text{th}$ decision tree in the ensemble,<br>
-  •	$T$: the number of leaves on a tree, <br>
-  •	$w$: the vector of leaf scores (weights), <br>
-  •	$\gamma$ and $\lambda$: regularization parameters that control tree complexity. <br>
-<br>
+:::
+
+::: {.column width="50%"}
+
+**Component Breakdown:**
+
+- $l(\hat{y}_i, y_i)$: Softmax loss for multiclass classification  
+- $f_k$: The $k^{\text{th}}$ decision tree  
+- $T$: Number of leaves in the tree  
+- $w$: Vector of leaf weights  
+- $\gamma$, $\lambda$: Regularization parameters  
+
+:::
+This structure balances model fit and complexity — helping prevent overfitting and improve generalization.
+:::
+
 ---
 
-### Efficiency and Interpretability
+## Efficiency and Interpretability {.smaller}
 <!-- Section 3.3.6, Efficiency and Interpretability   -->
-Therefore, by combining a strong predictive loss with a tree-specific complexity penalty, XGBoost is able to generalize well to new data, outperforming simpler models while remaining computationally efficient [@Chen_2016]. It also provides feature importance scores, offering insights into which terms most influence predictions—a valuable asset for customer service teams seeking actionable feedback. 
+- By combining a strong predictive loss with a tree-specific complexity penalty, XGBoost is able to generalize well to new data, outperforming simpler models while remaining computationally efficient [@Chen_2016]. 
 
-With the model trained, we evaluated its performance using several classification metrics. <br>
+- It provides feature importance scores, offering insights into which terms most influence predictions—a valuable asset for customer service teams seeking actionable feedback. 
+
+**XGBoost’s key strengths:**
+
+- High accuracy, fast training  
+- Regularization improves generalization  
+- Feature importance reveals impactful terms (e.g., “delay”, “help”)  
+- Scales to large datasets efficiently  
+
+Making it deal for customer support data where speed and interpretability matter.
+
 ---
 
-## Evaluation Metrics
+## Pipeline Overview  {.smaller}
+<!-- Subsection 2.5, Pipeline -->
+
+```{r, echo=FALSE, out.width="90%", fig.align='center'}
+knitr::include_graphics("Graphs/Pipeline.png")
+```
+
+---
+
+## Evaluation Metrics {.smaller}
 <!-- Section 3.4, Evaluation Metrics  -->
-- Core Performance Metrics
-- Handling Class Imbalance
----
 
-### Core Performance Metrics
-<!-- Section 3.4.1, Core Performance Metrics  -->
 To understand how well our model performed, we used four core metrics:
 
-- *Accuracy*: The proportion of correct predictions.
+- *Accuracy*: Overall correct predictions.
+
 - *Precision*: The proportion of correct predictions among all tweets the model labeled as a given class. 
+
 - *Recall*: The proportion of actual sentiment instances that were correctly identified. 
+
 - *F1 Score*: The harmonic mean of precision and recall. 
----
 
-### Handling Class Imbalance
-<!-- Section 3.4.2, Handling Class Imbalance  -->
-These metrics were selected to account for class imbalance, which is common in sentiment data sets. For instance, neutral tweets often dominate volume, while negative tweets are more operationally important in customer service. Therefore, we paid close attention to class-specific precision and recall, especially for the negative class, to ensure that frustrated customer messages were identified without over-triggering on neutral ones [@barik2024ivader; @gandy2025public].
----
+**Class Imbalance:**
 
-## Authorship Note
-<!-- Section 3.5, Authorship Note  -->
-Note: Some parts of this project were assisted by ChatGPT for writing support and citation formatting. All content was reviewed and edited by the authors to ensure accuracy and originality.
----
+These metrics were selected to account for class imbalance, which is common in sentiment data sets. 
 
+For instance, neutral tweets often dominate volume, while negative tweets are more operationally important in customer service. Therefore, we paid close attention to class-specific precision and recall, especially for the negative class, crucial for identifying frustrated users.
+
+---
 
 # Analysis and Results
 <!-- Section 4, Analysis and Results  -->
+- Data Exploration
+- Preprocessing & Sentiment Labeling
+- TF-IDF and Feature Vectorization
+- Modeling Pipeline
+- Overall Performance
+- Key Takeaways
 
 ---
 
-## Data Exploration and Visualization {.smaller}
+## Data Exploration {.smaller}
+<!-- Section 4.1, Data Exploration -->
 
-- Source: *Customer Support on Twitter* (Kaggle)
-- 2.8M tweets exchanged between customers and major companies
-- Fields used:
-  - `text`
-  - `created_at`
-  - `inbound` (customer or company)
-  - Metadata for threading (excluded from modeling) 
-  <br>
-  
+Dataset: *Customer Support on Twitter* (Kaggle)
+
+ - 2.8M tweets exchanged between major companies and customers
+
+ - Informal, emotionally expressive, real-world support conversations
+
+**Fields used**:
+
+- 'text': Tweet content
+
+- 'created_at': Timestamp of the tweet
+
+- 'inbound': Identifies if the tweet is from a customer (TRUE) or company (FALSE)
+
+Note: Metadata like threading was available but excluded from modeling
 ---
 
 ## Preprocessing & Sentiment Labeling {.smaller}
@@ -405,7 +411,7 @@ Note: Some parts of this project were assisted by ChatGPT for writing support an
 ::: {.column width="55%"}
 
 - Removed: URLs, mentions, hashtags  
-- Used **VADER** to assign compound sentiment scores  
+- Used VADER to assign compound sentiment scores  
 - Sentiment Distribution (VADER Labels):  
   - **Positive**: 51.7%  
   - **Neutral**: 24.6%  
@@ -459,38 +465,45 @@ knitr::include_graphics("Graphs/Word Cloud - Neg.png")
 
 
 #### Preparing for Modeling
-- Cleaned again for vectorization: lowercased, removed stopwords, special characters, URLs, mentions, hashtags  
-- Applied **TF-IDF** (n-grams up to 2 words, 5,000 features)
-- Result: sparse matrix well-suited for XGBoost
 
-> TF-IDF highlights important and rare terms across tweets
+- Cleaned again for vectorization by lowercasing all text and then removing: 
+  - stopwords, 
+  - special characters, 
+  - URLs, 
+  - mentions, 
+  - and hashtags 
+  
+- Applied **TF-IDF** (n-grams up to 2 words, 5,000 features)
+- Resulting in a sparse matrix well-suited for XGBoost
 
 ---
 
 ## TF-IDF and Feature Vectorization {.smaller}
 
-
 #### Top 20 Most Informative Terms
-```{r, echo=FALSE, out.width="90%"}
+```{r, echo=FALSE, out.width="80%", fig.align='center'}
 knitr::include_graphics("Graphs/TF IDF Bar Chart.png")
 ```
+
+**Insights**
+<p style="font-size: 80%; line-height: 1.4; margin-top: 1em;"> TF-IDF helps us identify which words are not just common, but actually important for telling tweets apart. It's like finding the loudest voices in a crowded room. <br> Words like <em>‘dm’, ‘help’, ‘thanks’, ‘sorry’,</em> and <em>‘account’</em> highlight the nature of support conversations—many of which are requests for assistance, apologies, or follow-ups. <br> These high-weighted features help the XGBoost model detect tone and intent without needing deep semantic understanding. For example, the presence of words like <em>‘sorry’</em> and <em>‘delay’</em> may signal negative sentiment, while <em>‘thanks’</em> or <em>‘hi’</em> may suggest a positive or neutral interaction. </p>
 ---
 
-## TF-IDF and Feature Vectorization {.smaller}
+## Building Our Sentiment Classifier {.smaller}
 
+- **Classifier:** We used XGBoost
 
-#### Top 20 Most Informative Terms
-- TF-IDF helps us identify which words are not just common, but actually important for telling tweets apart. It's like finding the loudest voices in a crowded room.
-- Words like ‘dm’, ‘help’, ‘thanks’, ‘sorry’, and ‘account’ highlight the nature of support conversations—many of which are requests for assistance, apologies, or follow-ups.
-- These high-weighted features help the XGBoost model detect tone and intent without needing deep semantic understanding. For example, the presence of words like ‘sorry’ and ‘delay’ may signal negative sentiment, while ‘thanks’ or ‘hi’ may suggest a positive or neutral interaction.
----
+- **Training data:** 150,000 tweets (50k per class, stratified)
 
-## Modeling Pipeline {.smaller}
+- **Test set:** 562,355 tweets
 
-- Classifier: **XGBoost**
-- Training data: 150,000 tweets (50k per class, stratified)
-- Test set: 562,355 tweets
-- Applied **class weighting** to improve recall for Negative tweets
+- **Feature Input:** TF-IDF matrix (5,000 n-grams)
+
+- **Class Weighting:** Applied to improve recall for Negative tweets
+
+- **Objective:** Softmax multiclass loss with regularization
+
+- **Output:** Class label (Positive, Neutral, Negative)
 
 ---
 
@@ -509,7 +522,7 @@ knitr::include_graphics("Graphs/TF IDF Bar Chart.png")
 | Recall    | 77.1%     |
 | F1 Score  | 77.45%    |
 
-> Balanced performance, with emphasis on improving recall for negative sentiment
+Balanced performance, with emphasis on improving recall for negative sentiment
 
 :::
 
@@ -537,12 +550,12 @@ knitr::include_graphics("Graphs/Confusion Matrix.png")
 
 - Improved **recall for Negative** from 64% → 68%
 
-> A key goal: identifying dissatisfaction more reliably. <br>
+A key goal: identifying dissatisfaction more reliably. <br>
 Recall on **Negative tweets** improved from 64% → 68% using sample weighting
 
 ---
 
-## Key Takeaways {.smaller}
+## Impact, Limitations, and Future Work {.smaller}
 
 **Business Impact**
 
@@ -565,18 +578,25 @@ Recall on **Negative tweets** improved from 64% → 68% using sample weighting
 
 ---
 
-# Conclusion {.smaller}
+# Conclusion 
+
+---
+
+## Conclusion {.smaller}
 
 This project successfully demonstrated a scalable approach to sentiment classification in customer support conversations by combining VADER, TF-IDF, and XGBoost. VADER provided fast and interpretable sentiment labels tailored for informal social media language, which we used to train a high-performing supervised classifier. 
 
 Achieved:
 
 - 77% accuracy
-
-- 0.71 F1 for Negative tone
-
+- 0.71 F1 Score for Negative tone
 - Fast, scalable tone detection
 
 By automating tone detection in real-time support channels, this framework offers immediate business value. It can help teams prioritize escalations, identify service bottlenecks, and monitor agent interactions at scale. Our findings confirm that interpretable, rule-based sentiment scoring (via VADER) can be successfully integrated with machine learning to support responsive, tone-aware customer engagement.
 
+<footer style="font-size: 14px; text-align: center; color: gray;">
+  *Authorship Note: Some parts of this project were assisted by ChatGPT for writing support and citation formatting. All content was reviewed and edited by the authors to ensure accuracy and originality.*
+</footer>
+
 ## References
+<!-- Pulls from references.bib -->
