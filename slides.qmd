@@ -134,8 +134,6 @@ Recent research continues to support and expand on VADER's use.
 
 - Lu and Schelle [@lu2025tesla] demonstrated how XGBoost could be used to extract interpretable feature importance from tweet sentiment, providing a compelling case for our approach. -->
 
----
-
 # Methods
 <!-- Section 3, Methods  -->
 
@@ -216,7 +214,7 @@ $$
 $$
 
 Where: <br>
-	•	$N_{w_n}$ is the number of documents that contain word w_n <br>
+	•	$N_{w_n}$ is the number of documents that contain word $w_n$ <br>
 
 **Example:** <br>
 If *delay* appears in 5 out of 500,000 tweets, its IDF will be much higher than that of *hello*, which may appear in 10,000 tweets.
@@ -392,8 +390,6 @@ Dataset: *Customer Support on Twitter* (Kaggle)
 
 - 'text': Tweet content
 
-- 'created_at': Timestamp of the tweet
-
 - 'inbound': Identifies if the tweet is from a customer (TRUE) or company (FALSE)
 
 Note: Metadata like threading was available but excluded from modeling
@@ -546,6 +542,7 @@ knitr::include_graphics("Graphs/Confusion Matrix.png")
 - Improved **recall for Negative** from 64% → 68%
 
 A key goal: identifying dissatisfaction more reliably. <br>
+
 Recall on **Negative tweets** improved from 64% → 68% using sample weighting
 
 ---
