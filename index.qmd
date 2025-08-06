@@ -57,6 +57,11 @@ With these foundations in place, we now detail the methodology that guided our i
 
 ## Methods
 
+*Pipeline illustration*
+```{r, echo=FALSE, out.width="50%", fig.align='center'}
+knitr::include_graphics("Graphs/Pipeline.png")
+```
+
 #### Preprocessing and Sentiment Labeling with VADER
 Before applying VADER, our process began by cleaning the raw tweet text to ensure consistency. We removed URLs, user mentions, and hashtags. While VADER can handle informal text, this step was performed to improve text uniformity and prepare for downstream modeling. After cleaning, we applied VADER to generate a compound sentiment score for each tweet and label tweets as Positive, Neutral, or Negative based on standardized thresholds. The compound sentiment score is computed as:
 
@@ -281,6 +286,11 @@ These linguistic cues confirmed that customers often use strong tonal indicators
 #### Modeling Pipeline Performance
 
 After labeling each tweet with a sentiment category using VADER, we prepared the data set for supervised classification by extracting numerical features using TF-IDF. In order to tokenize and vectorize the text, we had to preprocess the text again, this time removing all special characters, lowercasing all text, and removing stop words in addition to what was already removed for VADER. We used TF-IDF with n-grams(up to 2 words) and a vocabulary size capped at 5,000 features to transform the text into sparse numeric vectors. The final TF-IDF matrix was sparse and high-dimensional, well-suited for XGBoost, our classifier of choice. Sentiment labels were then encoded, and we trained XGBoost on stratified, balanced sample of 150,000 tweets (50k per class) to address class imbalance. 
+
+*Top 20 Most Informative Terms*
+```{r, echo=FALSE, out.width="80%", fig.align='center'}
+knitr::include_graphics("Graphs/TF IDF Bar Chart.png")
+```
 
 We split the dataset into 80% training and 20% testing subsets, maintaining class proportions with stratification. To improve recall on Negative tweets (a minority class), we applied sample weighting based on class distribution.
 
