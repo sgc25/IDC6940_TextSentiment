@@ -67,19 +67,17 @@ This dataset is ideal for sentiment analysis and predictive modeling.
 knitr::include_graphics("Graphs/DataSample.png")
 ```
 
----
+<!-- ## Methodological Foundations  {.smaller}
+<!-- Subsection 2.4, Literature-Informed Methodology
 
-## Methodological Foundations  {.smaller}
-<!-- Subsection 2.4, Literature-Informed Methodology -->
+--Natural Language Processing (NLP) has become a vital tool for understanding customer --sentiment across digital platforms. A variety of approaches have been proposed in the --literature, from lexicon-based models such as VADER to machine learning methods like XGBoost. 
+--<br>
 
-Natural Language Processing (NLP) has become a vital tool for understanding customer sentiment across digital platforms. A variety of approaches have been proposed in the literature, from lexicon-based models such as VADER to machine learning methods like XGBoost. 
-<br>
-
-This review highlights the studies that informed the methodological design of our project.
+--This review highlights the studies that informed the methodological design of our project.
 
 - Lexicon-Based Methods for Sentiment Analysis
 
-- Machine Learning for Sentiment Classification
+- Machine Learning for Sentiment Classification -->
 
 ---
 
@@ -98,17 +96,16 @@ VADER is particularly effective because it incorporates key linguistic signals s
 - **Negations** -> (e.g., “not good” → negative)
 
 These elements help capture the nuanced sentiment found in customer service conversations that traditional lexicon models may often miss. 
----
 
-## VADER in the Literature {.smaller}
-<!-- Subsection 2.4.1.2, VADER in the Literature  -->
+<!-- ## VADER in the Literature {.smaller}
+<!-- Subsection 2.4.1.2, VADER in the Literature
 Recent research continues to support and expand on VADER's use. 
 
 - Barik and Misra [@barik2024vader] evaluated an improved VADER lexicon in analyzing e-commerce reviews and emphasized its interpretability and processing speed. 
 
 - Chadha and Aryan [@chadha2023vader] also confirmed VADER’s reliability in sentiment classification tasks, noting its effectiveness in fast-paced business contexts. 
 
-- Youvan [@youvan2024vader] offered a comprehensive review of VADER’s core logic, highlighting its treatment of intensifiers, negations, and informal expressions.
+- Youvan [@youvan2024vader] offered a comprehensive review of VADER’s core logic, highlighting its treatment of intensifiers, negations, and informal expressions. -->
 
 ---
 
@@ -129,13 +126,13 @@ Recent research continues to support and expand on VADER's use.
 
 ---
 
-## XGBoost in the Literature {.smaller}
-<!-- Subsection 2.4.2.1, Why We Use XGBoost  -->
+<!-- ## XGBoost in the Literature {.smaller}
+<!-- Subsection 2.4.2.1, Why We Use XGBoost 
 - Lestari et al. [@lestari2025xgboost] compared XGBoost with AdaBoost for movie review classification and found XGBoost achieved higher accuracy and generalizability. 
 
 - Sefara and Rangata [@sefara2024domain] also found XGBoost to be the most effective model for classifying domain-specific tweets, outperforming Logistic Regression and SVM in both performance and efficiency. 
 
-- Lu and Schelle [@lu2025tesla] demonstrated how XGBoost could be used to extract interpretable feature importance from tweet sentiment, providing a compelling case for our approach.
+- Lu and Schelle [@lu2025tesla] demonstrated how XGBoost could be used to extract interpretable feature importance from tweet sentiment, providing a compelling case for our approach. -->
 
 ---
 
@@ -324,13 +321,11 @@ $$
 This structure balances model fit and complexity — helping prevent overfitting and improve generalization.
 :::
 
----
-
-## Efficiency and Interpretability {.smaller}
-<!-- Section 3.3.6, Efficiency and Interpretability   -->
+<!--## Efficiency and Interpretability {.smaller}
+<!-- Section 3.3.6, Efficiency and Interpretability  
 - By combining a strong predictive loss with a tree-specific complexity penalty, XGBoost is able to generalize well to new data, outperforming simpler models while remaining computationally efficient [@Chen_2016]. 
 
-- It provides feature importance scores, offering insights into which terms most influence predictions—a valuable asset for customer service teams seeking actionable feedback. 
+- It provides feature importance scores, offering insights into which terms most influence predictions—a valuable asset for customer service teams seeking actionable feedback.  
 
 **XGBoost’s key strengths:**
 
@@ -339,7 +334,7 @@ This structure balances model fit and complexity — helping prevent overfitting
 - Feature importance reveals impactful terms (e.g., “delay”, “help”)  
 - Scales to large datasets efficiently  
 
-Making it deal for customer support data where speed and interpretability matter.
+Making it deal for customer support data where speed and interpretability matter. -->
 
 ---
 
@@ -369,7 +364,7 @@ To understand how well our model performed, we used four core metrics:
 
 These metrics were selected to account for class imbalance, which is common in sentiment data sets. 
 
-For instance, neutral tweets often dominate volume, while negative tweets are more operationally important in customer service. Therefore, we paid close attention to class-specific precision and recall, especially for the negative class, crucial for identifying frustrated users.
+For instance, positive tweets dominate the volume, while negative tweets are more operationally important in customer service. Therefore, we paid close attention to class-specific precision and recall, especially for the negative class, crucial for identifying frustrated users.
 
 ---
 
@@ -378,7 +373,7 @@ For instance, neutral tweets often dominate volume, while negative tweets are mo
 - Data Exploration
 - Preprocessing & Sentiment Labeling
 - TF-IDF and Feature Vectorization
-- Modeling Pipeline
+- Sentiment Classifier
 - Overall Performance
 - Key Takeaways
 
@@ -417,7 +412,7 @@ Note: Metadata like threading was available but excluded from modeling
   - **Neutral**: 24.6%  
   - **Negative**: 23.7%  
 
-Surprising number of positive tweets due to resolution acknowledgments and polite brand replies.
+Surprisingly, we found a high percentage of positive tweets contradicting our initial expectation to find most support messages to be complaints or frustration.
 :::
 
 ::: {.column width="45%"}
